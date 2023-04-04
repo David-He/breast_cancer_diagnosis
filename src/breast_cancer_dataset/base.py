@@ -178,8 +178,8 @@ class GeneralDataBase:
         print(f'{"-" * 75}\n\tGetting masks: {self.df_desc.CONVERTED_MASK.nunique()} existing files.')
         # Se crea un pool de multihilos para realizar la tarea de forma paralelizada.
         # 多线程池被创建，以并行地执行该任务
-        #with ThreadPool(processes=cpu_count() - 2) as pool:
-        with ThreadPool(1) as pool:
+        #with ThreadPool(1) as pool:
+        with ThreadPool(processes=cpu_count() - 2) as pool:        
             results = tqdm(pool.imap(func, args), total=len(args), desc='getting mask files')
             tuple(results)
 
@@ -230,7 +230,8 @@ class GeneralDataBase:
             ]))
 
         # Se crea un pool de multihilos para realizar la tarea de procesado de forma paralelizada.
-        with ThreadPool(processes=cpu_count() - 2) as pool:
+        #with ThreadPool(processes=cpu_count() - 2) as pool:
+        with ThreadPool(1) as pool:
             results = tqdm(pool.imap(func, args), total=len(args), desc='preprocessing full images')
             tuple(results)
 
@@ -339,6 +340,7 @@ class GeneralDataBase:
         self.convert_images()
 
         # Se obtienen las mascaras
+        # 获得Mask文件
         self.get_image_mask()
 
         # Se preprocesan las imagenes.

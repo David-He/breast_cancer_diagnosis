@@ -633,6 +633,7 @@ class DataVisualizer:
     def get_data_augmentation_examples(self) -> None:
         """
         Función que permite generar un ejemplo de cada tipo de data augmentation aplicado
+        生成每一种类型的数据增强应用的例子。
         """
 
         # Se recuperan las instancias del excel de entrenamiento
@@ -657,7 +658,9 @@ class DataVisualizer:
         fig = plt.figure(figsize=(15, 4 * rows))
 
         # Se representa la imagen original en el primer subplot.
-        plot_image(img=image_ori, title='Imagen Original', ax_=fig.add_subplot(rows, cols, 1))
+        #plot_image(img=image_ori, title='Imagen Original', ax_=fig.add_subplot(rows, cols, 1))
+        plot_image(img=image_ori, title='原始图片', ax_=fig.add_subplot(rows, cols, 1))
+        
 
         # Se iteran las transformaciones
         for i, (transformation_name, transformation) in enumerate(CLASSIFICATION_DATA_AUGMENTATION_FUNCS.items(), 2):
@@ -677,27 +680,38 @@ class DataVisualizer:
     def get_eda_from_df(self) -> None:
         """
         Función para generar el pipeline del data exploratori de los datos para entrenar los modelos.
+        功能是生成数据探索者管道的数据，以训练模型。
         """
 
         df = self.get_dataframe_from_dataset_excel()
 
         print(f'{"-" * 75}\n\tGenerando análisis del dataset\n{"-" * 75}')
-        title = 'Distribución clases según orígen'
+        print(f'{"-" * 75}\n\t产生数据集的分析\n{"-" * 75}')
+        
+        #title = 'Distribución clases según orígen'
+        title = '按部位划分的等级分布'
         file = get_path(self.conf.model_viz_eda_dir, f'{title}.png')
-        create_countplot(x='DATASET', hue='IMG_LABEL', data=df, title=title, file=file)
+        #create_countplot(x='DATASET', hue='IMG_LABEL', data=df, title=title, file=file)
+        create_countplot(x='数据集', hue='IMG_LABEL', data=df, title=title, file=file)
 
-        title = 'Distribución clases'
+        #title = 'Distribución clases'
+        title = '等级分布'
         file = get_path(self.conf.model_viz_eda_dir, f'{title}.png')
         create_countplot(x='IMG_LABEL', data=df, title=title, file=file)
 
-        title = 'Distribución clases segun train-val'
+        #title = 'Distribución clases segun train-val'
+        title = '根据训练值的等级分布'
         file = get_path(self.conf.model_viz_eda_dir, f'{title}.png')
-        create_countplot(x='TRAIN_VAL', hue='IMG_LABEL', data=df, title=title, file=file, norm=True)
+        #create_countplot(x='TRAIN_VAL', hue='IMG_LABEL', data=df, title=title, file=file, norm=True)
+        create_countplot(x='训练值', hue='IMG_LABEL', data=df, title=title, file=file, norm=True)
 
-        title = 'Distribución clases segun patología'
+        #title = 'Distribución clases segun patología'
+        title = '按病理分类的等级分布'
         file = get_path(self.conf.model_viz_eda_dir, f'{title}.png')
-        create_countplot(x='ABNORMALITY_TYPE', hue='IMG_LABEL', data=df, title=title, file=file, norm=True)
+        #create_countplot(x='ABNORMALITY_TYPE', hue='IMG_LABEL', data=df, title=title, file=file, norm=True)
+        create_countplot(x='异常类型', hue='IMG_LABEL', data=df, title=title, file=file, norm=True)
         print(f'{"-" * 75}\n\tAnálisis del dataset finalizado en {self.conf.model_viz_eda_dir}\n{"-" * 75}')
+        #print(f'{"-" * 75}\n\tAnálisis del dataset finalizado en {self.conf.model_viz_eda_dir}\n{"-" * 75}')
 
     def get_preprocessing_examples(self) -> None:
         """

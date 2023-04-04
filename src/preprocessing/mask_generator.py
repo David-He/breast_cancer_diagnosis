@@ -108,9 +108,11 @@ def get_mias_roi_mask(args) -> None:
 def get_cbis_roi_mask(args) -> None:
     """
     Función para obtener las máscaras del set de datos CBIS - DDSM
-    :param args: Lista de argumentos que contendra según las siguientes posiciones:
-            1 - Path de la imagen original
-            2 - Path para guardar la máscara generada
+    获取CBIS-DDSM数据集掩码的功能
+    :param args: Lista de argumentos que contendra según las siguientes posiciones:根据以下位置包含的论据列表
+            1 - Path de la imagen original原始图像的路径
+            2 - Path para guardar la máscara generada保存生成的掩码的路径
+            3 - 原始图片的根目录(绝对路径)
     """
     try:
         if len(args) != 3:
@@ -122,7 +124,7 @@ def get_cbis_roi_mask(args) -> None:
         # se recuperan todas las máscaras de ROIS para una misma imágen mamográfica.
         masks = []
         #for img in search_files(file=get_path(CBIS_DDSM_DB_PATH, f'{args[0]}*_[0-9]'), ext='dcm'):
-        for img in search_files(file=get_path(cbis_ddsm_db_path, f'{args[0]}*_[0-9]'), ext='dcm'):
+        for img in search_files(file=get_path(cbis_ddsm_db_path,"**", f'{args[0]}*_[0-9]',create=False), ext='dcm',in_subdirs=True):
 
             # Se lee la información de las imagenes en formato dcm
             img = pydicom.dcmread(img)
@@ -134,7 +136,8 @@ def get_cbis_roi_mask(args) -> None:
             if len(np.unique(img_array)) == 2:
 
                 # Se realiza un reescalado de la imagen para obtener los valores entre 0 y 255
-                rescaled_image = (np.maximum(img_array, 0) / max(img_array)) * 255
+                #rescaled_image = (np.maximum(img_array, 0) / max(img_array)) * 255
+                rescaled_image = (np.maximum(img_array, 0) / img_array.max()) * 255
 
                 # Se limpian mascaras que sean de menos de 10 píxeles
                 _, _, h, w = cv2.boundingRect(np.uint8(rescaled_image))

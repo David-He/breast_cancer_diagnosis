@@ -54,10 +54,11 @@ def create_dir(path: io):
 def search_files(file: io, ext: str, in_subdirs: bool = True) -> iter:
     """
     Función para buscar todos los archivos contenidos en un directorio que presenten la extension mostrada
-    :param file: directorio sobre el cual realiar la busqueda
-    :param ext: extensión del archivo
-    :param in_subdirs: boleano para buscar en el directorio hijo o en los subdirectorios
-    :return: lista con los archivos del directorio file que tienen la extension ext
+    搜索一个目录中包含的所有文件，并显示扩展名。
+    :param file: directorio sobre el cual realiar la busqueda 要搜索的目录
+    :param ext: extensión del archivo 文件扩展名
+    :param in_subdirs: boleano para buscar en el directorio hijo o en los subdirectorios 是否在子目录中搜索
+    :return: lista con los archivos del directorio file que tienen la extension ext 返回 文件目录中扩展名为ext的文件的列表
     """
     if in_subdirs:
         return glob(os.path.join(file, '**', f'*.{ext}'), recursive=True)
