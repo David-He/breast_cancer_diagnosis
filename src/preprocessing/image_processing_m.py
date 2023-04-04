@@ -11,6 +11,8 @@ from preprocessing.functions import (
     apply_clahe_transform, remove_artifacts, remove_noise, crop_borders, pad_image_into_square, resize_img,
     normalize_breast, flip_breast, correct_axis
 )
+
+sys.path.append("..")
 from utils.config import LOGGING_DATA_PATH, PREPROCESSING_FUNCS, PREPROCESSING_CONFIG
 from utils.functions import (
     get_filename, save_img, get_path, get_value_from_args_if_exists, get_dirname, get_contours
@@ -41,6 +43,29 @@ def full_image_pipeline(args) -> None:
         3 - Booleano para almacenar los pasos intermedios para representarlos graficamente
         4 - path de destino de la máscara procesada con la zona de interés
         5 - path de origen de la máscara con la zona de interés de cada imagen
+    """
+    """
+    用于执行乳房X光片预处理的函数。该预处理包括：
+        1-修剪图像的边缘。
+        2-消除噪音
+        3-删除对图像的注释。
+        4-执行最小-最大标准化，以标准化8位图像。
+        5-应用图像均衡以提高对比度
+        6-重新设计水平翻转，以规范乳房的方向。
+        7-按所需的外观比填充图像
+        8-图像大小
+    如果存在遮罩，将应用感兴趣区域的以下功能（数据分割功能）。
+        1-修剪图像的边缘。
+        2-重新设计水平翻转，以规范乳房的方向。
+        3-按所需的外观比填充图像
+        4-图像大小
+    param args：参数的列表，其位置必须是：
+        1 - 原始图像的路径。
+        2 - 处理后图像的目标路径。
+        3 - 存储中间步骤的布尔值，以便用图形表示它们。
+        4 - 带有感兴趣区域的处理过的遮罩的目标路径。
+        5 - 遮罩的源路径，包括每个图像的感兴趣区域。
+
     """
 
     error_path: io = get_value_from_args_if_exists(args, 5, LOGGING_DATA_PATH, IndexError, KeyError)
