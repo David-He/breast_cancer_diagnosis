@@ -15,11 +15,13 @@ from utils.functions import get_path
 
 """
     CONFIGURACION DEL DATASET
+    数据集配置
 """
 TRAIN_DATA_PROP: float = 0.7
 
 """
     CONFIGURACION DATA AUGMENTATION
+    数据扩充配置
 """
 CLASSIFICATION_DATA_AUGMENTATION_FUNCS: dict = {
     'horizontal_flip': HorizontalFlip(),
@@ -40,6 +42,7 @@ SEGMENTATION_DATA_AUGMENTATION_FUNCS: dict = {
 
 """
     CONFIGURACION DE EJECUCIONES DE LOS MODELOS
+    模型运行的配置
 """
 EPOCHS: int = 150
 WARM_UP_EPOCHS: int = 5
@@ -69,6 +72,7 @@ SEGMENTATION_LOSS = DiceLoss() + (1 * BinaryFocalLoss())
 
 """
     CONFIGURACION PARA EL MODEL ENSEMBLING
+    模型组合的配置
 """
 THRESHOLD = 0.5
 ENSEMBLER_CONFIG = 'CONF1'
@@ -79,6 +83,7 @@ ENSEMBLER_COLS = {
 
 """
     CONFIGURACIÓN DE PREPROCESADO DE IMAGENES
+    图像预处理设置
 """
 IMG_SHAPE: tuple = (384, 192)
 PATCH_SIZE: tuple = (300, 300)
@@ -159,6 +164,7 @@ PREPROCESSING_FUNCS: dict = {
 
 """
     CARPETAS PRINCIPALES DEL PROGRAMA
+    主要方案文件夹
 """
 WORKING_DIRECTORY = sys._MEIPASS if getattr(sys, 'frozen', False) else os.getcwd()
 RAW_DATA_PATH: io = get_path(WORKING_DIRECTORY, 'data', '00_RAW') if getattr(sys, 'frozen', False) else \
@@ -175,6 +181,7 @@ LOGGING_DATA_PATH: io = get_path(os.getcwd(), 'LOGS') if getattr(sys, 'frozen', 
 
 """
     CARPETAS CON LOS DATASETS
+    带有数据集的文件夹
 """
 CBIS_DDSM_PATH: io = get_path(RAW_DATA_PATH, 'CBIS-DDSM')
 MIAS_PATH: io = get_path(RAW_DATA_PATH, 'MIAS')
@@ -182,6 +189,7 @@ INBREAST_PATH: io = get_path(RAW_DATA_PATH, 'INBreast')
 
 """
     FICHEROS CON LA METADATA DE LAS IMAGENES
+    带有图像元数据的文件
 """
 CBIS_DDSM_CALC_CASE_DESC_TEST: io = get_path(CBIS_DDSM_PATH, 'calc_case_description_test_set.csv')
 CBIS_DDSM_CALC_CASE_DESC_TRAIN: io = get_path(CBIS_DDSM_PATH, 'calc_case_description_train_set.csv')
@@ -192,6 +200,7 @@ MIAS_CASE_DESC: io = get_path(MIAS_PATH, 'Info.txt')
 
 """
     CARPETAS QUE CONTIENEN LAS IMAGENES
+    包含图像的文件夹
 """
 CBIS_DDSM_DB_PATH: io = get_path(CBIS_DDSM_PATH, 'ALL')
 MIAS_DB_PATH: io = get_path(MIAS_PATH, 'ALL')
@@ -199,11 +208,13 @@ INBREAST_DB_PATH: io = get_path(INBREAST_PATH, 'ALL')
 
 """
     CARPETA CON INFORMACIÓN DE LOS ROI's
+    RIOI信息文件夹
 """
 INBREAST_DB_XML_ROI_PATH = get_path(INBREAST_PATH, 'AllXML')
 
 """
     CARPETAS CON IMAGENES CONVERTIDAS
+    带有转换图像的文件夹
 """
 CBIS_DDSM_CONVERTED_DATA_PATH: io = get_path(CONVERTED_DATA_PATH, 'CBIS_DDSM')
 MIAS_CONVERTED_DATA_PATH: io = get_path(CONVERTED_DATA_PATH, 'MIAS')
@@ -212,6 +223,7 @@ TEST_CONVERTED_DATA_PATH: io = get_path(CONVERTED_DATA_PATH, 'Test')
 
 """
     CARPETAS CON LAS IMAGENES PROCESADAS
+    带有处理过的图像的文件夹
 """
 CBIS_DDSM_PREPROCESSED_DATA_PATH: io = get_path(PROCESSED_DATA_PATH, PREPROCESSING_CONFIG, 'CBIS_DDSM')
 MIAS_PREPROCESSED_DATA_PATH: io = get_path(PROCESSED_DATA_PATH, PREPROCESSING_CONFIG, 'MIAS')
@@ -221,11 +233,13 @@ TEST_PREPROCESSED_DATA_PATH: io = get_path(PROCESSED_DATA_PATH, PREPROCESSING_CO
 
 """
     CONSTANTES INTERFAZ GRAFICA
+    恒定的图形界面
 """
 APPLICATION_NAME: str = 'Breast Cancer Diagnosis'
 
 """
     CARPETAS DE LA INTERFAZ GRÁFICA
+    图形界面文件夹
 """
 GUI_CSS_PATH = get_path(WORKING_DIRECTORY, 'static', 'css', create=False)
 GUI_HTML_PATH = get_path(WORKING_DIRECTORY, 'static', 'html', 'help_window.html', create=False)
@@ -233,6 +247,7 @@ GUI_ICON_PATH = get_path(WORKING_DIRECTORY, 'static', 'images', 'logo.png', crea
 
 """
     CARPETAS DE RESULTADOS DEL MODELO 
+    模型结果文件夹
 """
 DEPLOYMENT_MODELS = get_path(MODEL_DATA_PATH, 'DEPLOYMENT')
 
