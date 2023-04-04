@@ -113,15 +113,16 @@ def get_cbis_roi_mask(args) -> None:
             2 - Path para guardar la máscara generada
     """
     try:
-        if len(args) != 2:
+        if len(args) != 3:
             raise ValueError('Incorrect number of arguments for function get_cbis_roi_mask')
 
         assert not os.path.isfile(args[1]), f'Mask {args[1]} already created.'
-
+        cbis_ddsm_db_path = args[2]
         # Dado que una misma imagen puede contener multiples lesiones informadas mediante sufijos _N siendo N un entero
         # se recuperan todas las máscaras de ROIS para una misma imágen mamográfica.
         masks = []
-        for img in search_files(file=get_path(CBIS_DDSM_DB_PATH, f'{args[0]}*_[0-9]'), ext='dcm'):
+        #for img in search_files(file=get_path(CBIS_DDSM_DB_PATH, f'{args[0]}*_[0-9]'), ext='dcm'):
+        for img in search_files(file=get_path(cbis_ddsm_db_path, f'{args[0]}*_[0-9]'), ext='dcm'):
 
             # Se lee la información de las imagenes en formato dcm
             img = pydicom.dcmread(img)

@@ -177,7 +177,9 @@ class GeneralDataBase:
 
         print(f'{"-" * 75}\n\tGetting masks: {self.df_desc.CONVERTED_MASK.nunique()} existing files.')
         # Se crea un pool de multihilos para realizar la tarea de forma paralelizada.
-        with ThreadPool(processes=cpu_count() - 2) as pool:
+        # 多线程池被创建，以并行地执行该任务
+        #with ThreadPool(processes=cpu_count() - 2) as pool:
+        with ThreadPool(1) as pool:
             results = tqdm(pool.imap(func, args), total=len(args), desc='getting mask files')
             tuple(results)
 
@@ -214,8 +216,9 @@ class GeneralDataBase:
     def preproces_images(self, args: list = None, func: callable = full_image_pipeline) -> None:
         """
         Función para procesar las imagenes de cada instancia mediante el uso de paralelismos
-        :param func: función de preprocesado de las imagenes
-        :param args: argumentos de la función de preprocesado
+        通过使用并行性来处理每个实例的图像的函数。
+        :param func: función de preprocesado de las imagenes 图像预处理功能
+        :param args: argumentos de la función de preprocesado 预处理函数的参数
         """
         print(f'{"-" * 75}\n\tStarting preprocessing of {self.df_desc.PROCESSED_IMG.nunique()} images')
 
@@ -332,6 +335,7 @@ class GeneralDataBase:
 
         # Se realiza la conversión de las imagenes
         # 以下执行图像转换
+        
         self.convert_images()
 
         # Se obtienen las mascaras

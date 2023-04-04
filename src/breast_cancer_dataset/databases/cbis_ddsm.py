@@ -99,7 +99,7 @@ class DatasetCBISDDSM(GeneralDataBase):
         :param args: parámetros a introducir en la función 'func' de los argumentos.
         """
         super(DatasetCBISDDSM, self).get_image_mask(
-            func=func, args=[(x.ID, x.CONVERTED_MASK) for _, x in self.df_desc.iterrows()]
+            func=func, args=[(x.ID, os.path.abspath(x.CONVERTED_MASK),os.path.abspath(CBIS_DDSM_DB_PATH)) for _, x in self.df_desc.iterrows()]
         )
 
 
@@ -132,7 +132,7 @@ class DatasetCBISDDSMCrop(DatasetCBISDDSM):
         # background, el numero de rois a obtener, el overlap de los rois y el margen de cada roi (zona de roi +
         # background).
         args = list(set([
-            (x.CONVERTED_IMG, x.PROCESSED_IMG, x.CONVERTED_MASK, p['N_BACKGROUND'], p['N_ROI'], p['OVERLAP'],
+            (os.path.abspath(x.CONVERTED_IMG), os.path.abspath(x.PROCESSED_IMG), os.path.abspath(x.CONVERTED_MASK), p['N_BACKGROUND'], p['N_ROI'], p['OVERLAP'],
              p['MARGIN']) for _, x in self.df_desc.iterrows()
         ]))
 
