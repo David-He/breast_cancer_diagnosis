@@ -90,12 +90,16 @@ class GeneralDataBase:
     def get_raw_files(self, df: pd.DataFrame, get_id_func: callable = lambda x: get_filename(x)) -> pd.DataFrame:
         """
         Función genérica para recuperar las rutas dónde se almacenan las imágenes de cada set de datos
+        检索每个数据集的图像存储路径的通用函数。
         :param df: pandas dataframe con la  'FILE_NAME' utilizada para unir los datos originales con el path de
                   almacenado de cada imagen.
+                  带有 "FILE_NAME "的pandas数据帧，用于连接原始数据和每个图像的存储路径。
         :param get_id_func: callable utilizado para crear un identificador único que permita unir la ruta de cada imagen
                             con la columna FILE_NAME de def.
+                            回调方法，用于创建一个唯一的标识符，将每个图像的路径与def的FILE_NAME列联系起来。
 
         :return: Pandas dataframe con la columna RAW_IMG especificando la ruta de almacenado de cada imagen
+                返回带有RAW_IMG列的Pandas数据框架，指定每张图片的存储路径。
         """
 
         # Se recuperan los paths de las imagenes almacenadas en cada dataset (self.ori_dir) con el formato específico
@@ -193,10 +197,12 @@ class GeneralDataBase:
 
         # Se crea el iterador con los argumentos necesarios para realizar la función a través de un multiproceso.
         if args is None:
-            args = list(set([(row.RAW_IMG, row.CONVERTED_IMG) for _, row in self.df_desc.iterrows()]))
+            args = list(set([(os.path.abspath(row.RAW_IMG), os.path.abspath(row.CONVERTED_IMG)) for _, row in self.df_desc.iterrows()]))
 
         # Se crea un pool de multihilos para realizar la tarea de conversión de forma paralelizada.
-        with ThreadPool(processes=cpu_count() - 2) as pool:
+        # 多线程池被创建，以并行地执行转换任务。
+        #with ThreadPool(1) as pool:
+        with ThreadPool(processes=cpu_count() - 2) as pool:        
             results = tqdm(pool.imap(func, args), total=len(args), desc='converting images')
             tuple(results)
 
@@ -305,21 +311,27 @@ class GeneralDataBase:
         self.add_dataset_columns(df)
 
         # Se realiza la búsqueda de las imagenes crudas
+        # 搜索原始图像
         df_with_raw_img = self.get_raw_files(df)
 
         # Se añaden columnas adicionales para completar las columnas del dataframe
+        # 添加扩展列
         df_def = self.add_extra_columns(df_with_raw_img)
 
         # Se añaden las columnas con el destino de las máscaras.
+        # 添加掩码图片的目的地址列
         self.add_mask_files(df_def)
 
         # Se añaden las columnas con el destino de las imagenes
+        # 添加图像的目的地址列
         self.df_desc = self.add_img_files(df_def)
 
         # Se limpia el dataframe de posibles duplicidades
+        # 从数据中清理可能重复的部分        
         self.clean_dataframe()
 
         # Se realiza la conversión de las imagenes
+        # 以下执行图像转换
         self.convert_images()
 
         # Se obtienen las mascaras

@@ -108,6 +108,7 @@ class DatasetCBISDDSMCrop(DatasetCBISDDSM):
     """
         Clase cuyo objetivo consiste en preprocesar los datos de la base de datos CBISDDSM y generar imagenes
         con las regiones de interes del dataset.
+        该类的目的是对CBISDDSM数据库的数据进行预处理，并生成带有数据集感兴趣区域的图像。
     """
 
     IMG_TYPE: str = get_path('CROP', CROP_CONFIG, create=False)
@@ -115,9 +116,12 @@ class DatasetCBISDDSMCrop(DatasetCBISDDSM):
     def preproces_images(self, args: list = None, func: callable = crop_image_pipeline) -> None:
         """
         Función utilizada para realizar el preprocesado de las imagenes recortadas.
+        用于对裁剪的图像进行预处理的函数。
 
         :param func: función utilizada para generar los rois del set de datos
+                    用来生成数据集的rois的函数
         :param args: lista de argumentos a introducir en la función 'func'.
+                    要在函数中输入的参数列表
         """
 
         # Se recupera la configuración para realizar el preprocesado de las imagenes.

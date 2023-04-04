@@ -24,11 +24,18 @@ from preprocessing.image_processing import resize_img
 
 
 class BreastCancerDataset:
+    """
 
     DBS = {
             'COMPLETE_IMAGE': [DatasetCBISDDSM, DatasetINBreast, DatasetMIAS],
             'PATCHES': [DatasetCBISDDSMCrop, DatasetINBreastCrop, DatasetMIASCrop]
         }
+    """
+    DBS = {
+            'COMPLETE_IMAGE': [DatasetCBISDDSM],
+            'PATCHES': [DatasetCBISDDSMCrop]
+        }
+
 
     def __init__(
             self,

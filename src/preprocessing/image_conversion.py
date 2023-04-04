@@ -31,9 +31,13 @@ def convert_img(args) -> None:
         dest_path: io = args[1]
 
         # Para las imagenes dicom este valor permite recuperar las máscaras
+        # 对于dicom图像，该值允许检索掩码。
         filter_binary: bool = get_value_from_args_if_exists(args, 2, False, IndexError, TypeError)
 
+        #current_path = os.path.dirname( os.path.abspath(__file__))
+        #print(f'{"-" * 75}\n current path: {current_path} \n{"-" * 75}')
         # Se valida que el formato de conversión sea el correcto y se valida que existe la imagen a transformar
+        # 验证转换格式是否正确，要转换的图像是否存在。
         if not os.path.isfile(img_path):
             raise FileNotFoundError(f"{img_path} doesn't exists.")
         if os.path.splitext(img_path)[1] not in ['.pgm', '.dcm']:
@@ -42,6 +46,7 @@ def convert_img(args) -> None:
         assert not os.path.isfile(dest_path), f'Image converted {dest_path} currently exists'
 
         # En función del formato de origen se realiza una conversión u otra
+        # 根据源格式的不同，会进行一种或另一种转换。
         if os.path.splitext(img_path)[1] == '.dcm':
             convert_dcm_imgs(ori_path=img_path, dest_path=dest_path, filter_binary=filter_binary)
         elif os.path.splitext(img_path)[1] == '.pgm':
@@ -87,12 +92,16 @@ def convert_dcm_imgs(ori_path: io, dest_path: io, filter_binary: bool) -> None:
             assert len(np.unique(img_array)) > 2, f'{ori_path} excluded. Binary Image.'
 
         # Se realiza un reescalado de la imagen para obtener los valores entre 0 y 255
-        rescaled_image = (np.maximum(img_array, 0) / max(img_array)) * 255
+        # 图像被重新缩放以获得0到255之间的数值。
+        #rescaled_image = (np.maximum(img_array, 0) / max(img_array)) * 255
+        rescaled_image = (np.maximum(img_array, 0) / img_array.max()) * 255
 
         # Se convierte la imagen al ipode datos unsigned de 8 bytes
+        # 图像被转换为8字节的无符号ipode数据
         final_image = np.uint8(rescaled_image)
 
         # Se almacena la imagen
+        # 存储图像
         Image.fromarray(final_image).save(dest_path)
 
     except AssertionError:
