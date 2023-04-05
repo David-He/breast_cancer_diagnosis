@@ -7,3 +7,37 @@
 2, 在可视化时 sns.countplot使用中文出错。
    import seaborn as sns
    Seaborn 是基于 Python 且非常受欢迎的图形可视化库，在 Matplotlib 的基础上，进行了更高级的封装，使得作图更加方便快捷。
+   
+3, 为什么没有生成Processed_Mask 被处理过的Mask文件？
+
+4, dataset.xlsx中没有ABNORMALITY_TYPE列？导致按照病理分类显示图像失败
+   在base.py GeneralDataBase DF_COLS中添加 ABNORMALITY_TYPE
+
+5, 理解一些医学名词
+   calc calcification 钙化灶
+   mass 肿块
+   数据集中分 钙化灶的训练和测试数据集和肿块的训练和测试数据集
+   钙化灶数据集中的主要数据
+   patient_id	病人ID
+   breast density	乳腺密度
+   left or right breast	左右侧
+   image view		图像类别 （CC 乳腺上下挤压， MLO内外侧斜位）
+   abnormality id	异常ID(1-7)
+   abnormality type	异常类别（ calcification钙化灶, mass 肿块）
+   calc type	钙化类别（AMORPHOUS不规则, AMORPHOUS-PLEOMORPHIC不规则-多形态, AMORPHOUS-ROUND_AND_REGULAR,COARSE粗糙,COARSE-LUCENT_CENTER中心粗糙 等等）	
+   calc distribution	钙化分布（CLUSTERED成群的,CLUSTERED-LINEAR 线状，REGIONAL区域的 等等）
+   assessment	医生评估（2，3，4，5）
+   pathology 病理诊断（BENIGN_WITHOUT_CALLBACK 良性无回调, BENIGN良性，MALIGNANT恶性的）	
+   subtlety	细微 1，2，3，4，5
+   image file path	原始图片文件地址
+   cropped image file path	剪切的图片文件地址
+   ROI mask file path 遮罩图片地址
+   														
+   mass shape 肿块形状(IRREGULAR不规则 ， ARCHITECTURAL DISTORTION结构扭曲 ，ROUND 圆形等)												
+   mass margins 肿块边缘（ILL_DEFINED 定义不清，SPICULATED 针刺 等）
+   
+6， 如果已经生成Preprocesed文件，则不必再次生成。
+   
+7， 进行到训练阶段，但是出现异常
+														
+   

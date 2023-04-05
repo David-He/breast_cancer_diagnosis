@@ -28,8 +28,8 @@ class GeneralDataBase:
     __name__ = 'GeneralDataBase'
     IMG_TYPE: str = 'FULL'
     DF_COLS = [
-        'ID', 'DATASET', 'BREAST', 'BREAST_VIEW', 'BREAST_DENSITY', 'IMG_TYPE', 'FILE_NAME', 'RAW_IMG', 'CONVERTED_IMG',
-        'PROCESSED_IMG', 'CONVERTED_MASK', 'PROCESSED_MASK', 'IMG_LABEL'
+        'ID', 'DATASET', 'BREAST', 'BREAST_VIEW', 'BREAST_DENSITY', 'IMG_TYPE','ABNORMALITY_TYPE', 'FILE_NAME', 'RAW_IMG', 'CONVERTED_IMG',
+        'PROCESSED_IMG', 'CONVERTED_MASK', 'PROCESSED_MASK', 'IMG_LABEL',
     ]
     df_desc = pd.DataFrame(columns=DF_COLS, index=[0])
 
@@ -347,7 +347,7 @@ class GeneralDataBase:
         self.preproces_images()
 
         # Se eliminan las imagenes que no hayan podido ser procesadas y se obtiene un único registro a nivel de label
-        # e imagen.
+        # e imagen. 无法处理的图像被删除，并在标签和图像级别获得单个记录。
         self.delete_observations()
 
 

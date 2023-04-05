@@ -236,14 +236,14 @@ class BreastCancerDataset:
     def split_dataset(self, train_prop: float, strat_cols: list = None, test_id: list = None):
         """
         Función que permite dividir el dataset en un subconjunto de entrenamiento y otro de validación. La división
-        puede ser estratificada.
+        puede ser estratificada. 允许将数据集分为训练子集和验证子集的函数。该部门可以分层。
         Para realizar la división se creará una columna nueva en el atributo desc_df indicando a que subconjunto de
-        datos pertenece cada observación.
+        datos pertenece cada observación.要进行分割，将在desc_df属性中创建一个新列，指示每个观测所属的数据子集。
 
-        :param train_prop: proporción del total de observaciones del dataset con los que se creará el conjunto de train
+        :param train_prop: proporción del total de observaciones del dataset con los que se creará el conjunto de train数据集中总观测值的比例，将从该数据集中创建训练集。
         :param strat_cols: lista de columnas pertenecientes al pandas dataframe para realizar el estratficado de
-                           observaciones al realizar el split en train y validacion.
-        :param test_id: lista de valores para la columna DATASET que pertenecerán a la partición de test
+                           observaciones al realizar el split en train y validacion.属于pandas数据框架的列的列表，用于在训练和验证中进行观察结果的分割。
+        :param test_id: lista de valores para la columna DATASET que pertenecerán a la partición de test将属于测试分区的DATASET列的值列表
         """
 
         if test_id is None:

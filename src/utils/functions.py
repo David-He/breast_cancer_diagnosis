@@ -65,6 +65,11 @@ def search_files(file: io, ext: str, in_subdirs: bool = True) -> iter:
     else:
         return glob(os.path.join(file, f'*.{ext}'), recursive=True)
 
+def search_files2(file: io)->iter:
+    """
+    调用者组织好查找的目录和文件
+    """
+    return glob(file)
 
 def save_img(img: np.ndarray, save_example_dirpath: io, name: str):
     """

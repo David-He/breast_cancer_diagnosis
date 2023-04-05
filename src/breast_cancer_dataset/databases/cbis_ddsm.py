@@ -37,14 +37,16 @@ class DatasetCBISDDSM(GeneralDataBase):
         Función que creará un dataframe con información del dataset CBIS-DDSM. Para cada imagen, se pretende recuperar
         la tipología (IMG_LABEL) detectada, el path de origen de la imagen y su nombre (nombre del estudio que contiene
         el identificador del paciente, el seno sobre el cual se ha realizado la mamografía y el tipo de mamografía).
-
-        :return: pandas dataframe con la base de datos procesada.
+        该函数将创建一个包含CBIS-DDSM数据集信息的DataFrame。对于每一张图像,其目的是恢复检测到的类型、图像的来源路径及其名称(包含患者标识符的研究名称、进行乳房X光检查的乳房和乳房X光检查的类型)。
+        
+        :return: pandas dataframe con la base de datos procesada. 返回 处理数据库的Pandas Dataframe
         """
 
         # Se crea una lista que contendrá la información de los archivos csv del set de datos
         l = []
 
         # Se iteran los csv con información del set de datos para unificarlos
+        # 用数据集信息迭代CSV以统一它们
         print(f'{"=" * 70}\n\tGetting information from database {self.__name__} ({self.IMG_TYPE})\n{"=" * 70}')
         for path in self.database_info_file_paths:
             l.append(pd.read_csv(path))
@@ -53,13 +55,16 @@ class DatasetCBISDDSM(GeneralDataBase):
 
         # Se crea la columna IMG_LABEL que contendrá las tipologías 'BENIGN' y 'MALIGNANT'. Se excluyen los casos de
         # patologias 'benign without callback'.
+        #创建包含“良性”和“恶性”类型的img_label列。不包括“良性无回调”疾病的病例。
         df.loc[:, 'IMG_LABEL'] = df.pathology.where(df.pathology != 'BENIGN_WITHOUT_CALLBACK', np.nan)
 
         # Se crea la columna ABNORMALITY_TYPE que indicará si se trata de una calcificación o de una masa.
+        #创建异常类型列，该列将指示这是钙化还是肿块
         df.loc[:, 'ABNORMALITY_TYPE'] = np.where(df['abnormality type'] == 'calcification', 'CALC', 'MASS')
 
         # El campo que contiene información de la localización de las imagenes sin convertir es 'image file path'.
         # Se suprimen posibles duplicidades en este campo para realizar el procesado una única vez.
+        # 包含未转换图像位置信息的字段是“图像文件路径”。删除该字段中可能的重复，以便只执行一次处理。
         df.drop_duplicates(subset=['image file path'], inplace=True)
 
         # Se obtiene si se trata del seno derecho o izquierdo
@@ -136,11 +141,11 @@ class DatasetCBISDDSMCrop(DatasetCBISDDSM):
              p['MARGIN']) for _, x in self.df_desc.iterrows()
         ]))
 
-        # Se llama a la función que procesa las imagenes para obtener los rois
+        # Se llama a la función que procesa las imagenes para obtener los rois 调用处理图像以获得ROI的函数
         super(DatasetCBISDDSMCrop, self).preproces_images(args=args, func=func)
 
         # Se llama a la función que une el path de cada roi con cada imagen original del dataset y con su
-        # correspondiente hilera del dataset
+        # correspondiente hilera del dataset 调用将每个ROI的路径与数据集的每个原始图像及其相应的数据集行连接起来的函数
         super(DatasetCBISDDSMCrop, self).get_roi_imgs()
 
     def delete_observations(self) -> None:

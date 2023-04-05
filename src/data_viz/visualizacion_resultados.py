@@ -25,6 +25,8 @@ from algorithms.utils import apply_bootstrap
 sns.set(style='white')
 sns.despine()
 
+plt.rcParams["font.sans-serif"]=["SimHei"] #设置字体
+plt.rcParams["axes.unicode_minus"]=False #正常显示负号
 
 class DataVisualizer:
     """
@@ -689,27 +691,28 @@ class DataVisualizer:
         print(f'{"-" * 75}\n\t产生数据集的分析\n{"-" * 75}')
         
         #title = 'Distribución clases según orígen'
-        title = '按部位划分的等级分布'
+        #title = '按部位划分的等级分布'
+        title = '数据来源分类'
         file = get_path(self.conf.model_viz_eda_dir, f'{title}.png')
-        #create_countplot(x='DATASET', hue='IMG_LABEL', data=df, title=title, file=file)
-        create_countplot(x='数据集', hue='IMG_LABEL', data=df, title=title, file=file)
+        create_countplot(x='DATASET', hue='IMG_LABEL', data=df, title=title, file=file)
+        #create_countplot(x='数据集', hue='IMG_LABEL', data=df, title=title, file=file)
 
         #title = 'Distribución clases'
-        title = '等级分布'
+        title = '良性恶性分类'
         file = get_path(self.conf.model_viz_eda_dir, f'{title}.png')
         create_countplot(x='IMG_LABEL', data=df, title=title, file=file)
 
         #title = 'Distribución clases segun train-val'
-        title = '根据训练值的等级分布'
+        title = '根据训练-测试分类'
         file = get_path(self.conf.model_viz_eda_dir, f'{title}.png')
         #create_countplot(x='TRAIN_VAL', hue='IMG_LABEL', data=df, title=title, file=file, norm=True)
-        create_countplot(x='训练值', hue='IMG_LABEL', data=df, title=title, file=file, norm=True)
+        create_countplot(x='TRAIN_VAL', hue='IMG_LABEL', data=df, title=title, file=file, norm=True)
 
         #title = 'Distribución clases segun patología'
         title = '按病理分类的等级分布'
         file = get_path(self.conf.model_viz_eda_dir, f'{title}.png')
-        #create_countplot(x='ABNORMALITY_TYPE', hue='IMG_LABEL', data=df, title=title, file=file, norm=True)
-        create_countplot(x='异常类型', hue='IMG_LABEL', data=df, title=title, file=file, norm=True)
+        create_countplot(x='ABNORMALITY_TYPE', hue='IMG_LABEL', data=df, title=title, file=file, norm=True)
+        #create_countplot(x='异常类型', hue='IMG_LABEL', data=df, title=title, file=file, norm=True)
         print(f'{"-" * 75}\n\tAnálisis del dataset finalizado en {self.conf.model_viz_eda_dir}\n{"-" * 75}')
         #print(f'{"-" * 75}\n\tAnálisis del dataset finalizado en {self.conf.model_viz_eda_dir}\n{"-" * 75}')
 

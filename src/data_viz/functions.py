@@ -7,20 +7,22 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import numpy as np
 
+plt.rcParams["font.sans-serif"]=["SimHei"] #设置字体
+plt.rcParams["axes.unicode_minus"]=False #正常显示负号
 
 def create_countplot(data: DataFrame, file: io, x: str, hue: str = None, title: str = '', annotate: bool = True,
                      norm: bool = False):
     """
     Función utilizada para crear un countplot de seaborn
-    用于创建海产计数图的函数
+    用于创建SeaBorn CountPlot的函数
     :param data: pandas dataframe con los datos a crear el countplot用数据创建计数图的pandas数据框架
     :param file: filepath donde guardar la imagen保存图像的文件路径
     :param x: nombre de columna del data que será la X del countplot将成为计数图中X的数据的列名
-    :param hue: nombre de columna de data que servirá para segregar clases en el countplot数据列的名称，用于在计数图中分隔类别。
+    :param hue: nombre de columna de data que servirá para segregar clases en el countplot数据列的名称,用于在计数图中分隔类别。
     :param title: titulo de gráfico图表标题
     :param annotate: booleano para anotar los valores de cada barra del countplot 布尔值，用于注释计数图的每个条形图的值。
     :param norm: booleano para realizar una normalización ed los valores individuales de cada X en función de hue
-                 布尔值，根据色调对每个X的单个值进行归一化处理。
+                 布尔值,根据色调对每个X的单个值进行归一化处理。
     """
 
     # Figura de matplotlib para almacenar el gráfico

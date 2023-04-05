@@ -13,34 +13,35 @@ from preprocessing.functions import (
 )
 from utils.config import LOGGING_DATA_PATH, PREPROCESSING_FUNCS, PREPROCESSING_CONFIG
 from utils.functions import (
-    get_filename, save_img, get_path, get_value_from_args_if_exists, get_dirname, get_contours
+    get_filename, save_img, get_path, get_value_from_args_if_exists, get_dirname, get_contours,search_files2
 )
 
 
 def full_image_pipeline(args) -> None:
     """
     Función utilizada para realizar el preprocesado de las mamografías. Este preprocesado consiste en:
-        1 - Recortar los bordes de las imagenes.
-        2 - Eliminar el ruido
-        3 - Quitar anotaciones realizadas sobre las imagenes.
-        4 - Realizar una normalización min-max para estandarizar las imagenes a 8 bits.
-        5 - Aplicar una ecualización de las imagenes para mejorar el contrastre
-        6 - Relizar un flip horizontal para estandarizar la orientacion de los senos.
-        7 - Realizar el padding de las imagenes al aspect ratio deseado
-        8 - Resize de las imagenes
+        执行乳房X光片预处理的函数。该预处理包括
+        1 - Recortar los bordes de las imagenes.剪裁图像的边缘
+        2 - Eliminar el ruido 消除噪音
+        3 - Quitar anotaciones realizadas sobre las imagenes.删除对图像的注释
+        4 - Realizar una normalización min-max para estandarizar las imagenes a 8 bits.执行Min-Max标准化以标准化8位图像
+        5 - Aplicar una ecualización de las imagenes para mejorar el contrastre 应用图像均衡以提高对比度
+        6 - Relizar un flip horizontal para estandarizar la orientacion de los senos.重新设计水平翻转以标准化乳房的方向
+        7 - Realizar el padding de las imagenes al aspect ratio deseado 按所需的纵横比填充图像
+        8 - Resize de las imagenes重新调整图像
     En caso de existir una máscara, se aplicarán las siguientes funciones de la zona de interes (funcionalidad para
-    segmentación de datos).
-        1 - Recortar los bordes de las imagenes.
-        2 - Relizar un flip horizontal para estandarizar la orientacion de los senos.
-        3 - Realizar el padding de las imagenes al aspect ratio deseado
-        4 - Resize de las imagenes
+    segmentación de datos). 如果存在遮罩，将应用感兴趣区域的以下功能（用于数据分割）
+        1 - Recortar los bordes de las imagenes.剪裁图像的边缘。
+        2 - Relizar un flip horizontal para estandarizar la orientacion de los senos.重新设计水平翻转，以规范乳房的方向
+        3 - Realizar el padding de las imagenes al aspect ratio deseado按所需的纵横比填充图像
+        4 - Resize de las imagenes 重新调整图像
 
     :param args: listado de argumentos cuya posición debe ser:
-        1 - path de la imagen sin procesar.
-        2 - path de destino de la imagen procesada.
-        3 - Booleano para almacenar los pasos intermedios para representarlos graficamente
-        4 - path de destino de la máscara procesada con la zona de interés
-        5 - path de origen de la máscara con la zona de interés de cada imagen
+        1 - path de la imagen sin procesar.未处理图像的路径
+        2 - path de destino de la imagen procesada.处理图像的目标路径
+        3 - Booleano para almacenar los pasos intermedios para representarlos graficamente布尔存储中间步骤以图形方式表示它们
+        4 - path de destino de la máscara procesada con la zona de interés用感兴趣的区域处理掩码的目标路径
+        5 - path de origen de la máscara con la zona de interés de cada imagen带有每个图像感兴趣区域的遮罩源路径
     """
 
     error_path: io = get_value_from_args_if_exists(args, 5, LOGGING_DATA_PATH, IndexError, KeyError)
@@ -206,7 +207,15 @@ def crop_image_pipeline(args) -> None:
         margin_roi: float = get_value_from_args_if_exists(args, 6, 1.0, IndexError, TypeError)
         # save_intermediate_steps: bool = get_value_from_args_if_exists(args, 7, False, IndexError, TypeError)
 
+        #如果输出文件已经存在，则退出
+        
+        files = list(search_files2(get_path(get_dirname(out_filepath), f'*{get_filename(out_filepath)}*{extension}',create=False)))
+        if len(files) > 0:
+            return
+        
         # Se valida que el formato de conversión sea el correcto y se valida que existe la imagen a transformar
+        #验证转换格式是否正确，并验证是否存在要转换的图像
+        
         if not os.path.isfile(img_filepath):
             raise FileNotFoundError(f'The image {img_filepath} does not exists.')
         if not os.path.isfile(roi_mask_path):
@@ -217,23 +226,23 @@ def crop_image_pipeline(args) -> None:
         # Se almacena la configuración del preprocesado
         prep_dict = PREPROCESSING_FUNCS[PREPROCESSING_CONFIG]
 
-        # Se lee la imagen original sin procesar.
+        # Se lee la imagen original sin procesar.读取未处理的原始图像。
         img = cv2.cvtColor(cv2.imread(img_filepath), cv2.COLOR_BGR2GRAY)
 
-        # Se lee la mascara
+        # Se lee la mascara读取Mask
         mask = cv2.cvtColor(cv2.imread(roi_mask_path), cv2.COLOR_BGR2GRAY)
 
-        # Primero se realiza un crop de las imagenes en el caso de que sean imagenes completas
+        # Primero se realiza un crop de las imagenes en el caso de que sean imagenes completas首先对图像进行裁剪，以防它们是完整的图像
         crop_img = crop_borders(img, **prep_dict.get('CROPPING_1', {}))
 
-        # Se aplica el mismo procesado a la mascara
+        # Se aplica el mismo procesado a la mascara将相同的处理应用于Mask
         img_mask = crop_borders(mask, **prep_dict.get('CROPPING_1', {}))
 
-        # A posteriori se quita el ruido de las imagenes utilizando un filtro medio
+        # A posteriori se quita el ruido de las imagenes utilizando un filtro medio使用平均滤波器从图像中去除后验噪声
         img_denoised = remove_noise(crop_img, **prep_dict.get('REMOVE_NOISE', {}))
 
         # Se obtienen las zonas de patologia de la mascara juntamente con las
-        # El siguiente paso consiste en eliminar los artefactos de la imagen. Solo aplica a imagenes completas
+        # El siguiente paso consiste en eliminar los artefactos de la imagen. Solo aplica a imagenes completas下一步是消除图像中的伪影，同时获得口罩的病理区域。仅适用于完整图像
         _, _, breast_mask, mask = remove_artifacts(img_denoised, img_mask, False,
                                                    **prep_dict.get('REMOVE_ARTIFACTS', {}))
 
@@ -252,16 +261,16 @@ def crop_image_pipeline(args) -> None:
                 roi_zones.append(img_denoised[y_min:y_max, x_min:x_max])
                 mask_zones.append(breast_zone[y_min:y_max, x_min:x_max])
 
-                # Se suprimen las zonas de la patología para posteriormente obtener la zona del background
+                # Se suprimen las zonas de la patología para posteriormente obtener la zona del background删除病理区域以随后获得背景区域
                 cv2.rectangle(breast_mask, (x_min, y_min), (x_max, y_max), color=(0, 0, 0), thickness=-1)
 
-        # Se procesan las zonas de interes recortadas
+        # Se procesan las zonas de interes recortadas处理切割的感兴趣区域
         for idx, (roi, roi_mask, tipo) in enumerate(zip(roi_zones, mask_zones, repeat('roi', len(roi_zones)))):
 
             roi_norm = normalize_breast(roi, roi_mask, **prep_dict.get('NORMALIZE_BREAST', {}))
 
             # A continuación se realiza aplica un conjunto de ecualizaciones la imagen. El número máximo de
-            # ecualizaciones a aplicar son 3 y serán representadas enc ada canal
+            # ecualizaciones a aplicar son 3 y serán representadas enc ada canal然后对图像进行一组均衡。要应用的最大均衡数为3，将表示为Encada信道
             ecual_imgs = []
             img_to_ecualize = roi_norm.copy()
             assert 0 < len(prep_dict['ECUALIZATION'].keys()) < 4, 'Número de ecualizaciones incorrecto'
