@@ -36,12 +36,12 @@ class GeneralDataBase:
     def __init__(self, ori_dir: io, ori_extension: str, dest_extension: str, converted_dir: io, procesed_dir: io,
                  database_info_file_paths: List[io]):
         """
-        :param ori_dir: directorio con las imagenes
-        :param ori_extension: extensión de las imagenes del dataset
-        :param dest_extension: extensión final de las imagenes convertidas
-        :param converted_dir: directorio en el que se volcarán las imagenes convertidas
-        :param procesed_dir: directorio en el que se volcarán las imagenes procesadas
-        :param database_info_file_paths: lista con los ficheros que contienen información del dataset
+        :param ori_dir: directorio con las imagenes 原有图像目录
+        :param ori_extension: extensión de las imagenes del dataset数据集图像扩展名
+        :param dest_extension: extensión final de las imagenes convertidas 转换图像的扩展名
+        :param converted_dir: directorio en el que se volcarán las imagenes convertidas 转换的图像将被转储到的目录
+        :param procesed_dir: directorio en el que se volcarán las imagenes procesadas 处理的图像将被转储到的目录
+        :param database_info_file_paths: lista con los ficheros que contienen información del dataset 包含数据集信息的文件列表
         """
 
         for p in database_info_file_paths:
@@ -231,7 +231,8 @@ class GeneralDataBase:
 
         # Se crea un pool de multihilos para realizar la tarea de procesado de forma paralelizada.
         #with ThreadPool(processes=cpu_count() - 2) as pool:
-        with ThreadPool(1) as pool:
+        #with ThreadPool(1) as pool:
+        with ThreadPool(processes=cpu_count() - 2) as pool:
             results = tqdm(pool.imap(func, args), total=len(args), desc='preprocessing full images')
             tuple(results)
 
@@ -307,11 +308,12 @@ class GeneralDataBase:
         print(f'\tExcluding {len(df[df.IMG_LABEL.isnull()].index.drop_duplicates())} samples without pathologies.')
         df.drop(index=df[df.IMG_LABEL.isnull()].index, inplace=True)
 
-        # Se suprimen los casos cuya patología no sea masas
-        print(f'\tExcluding {len(df[df.ABNORMALITY_TYPE != "MASS"].index.drop_duplicates())} non mass pathologies.')
-        df.drop(index=df[df.ABNORMALITY_TYPE != 'MASS'].index, inplace=True)
+        # Se suprimen los casos cuya patología no sea masas 病理不是肿块的病例被删除
+        # 暂时保留所有类型
+        #print(f'\tExcluding {len(df[df.ABNORMALITY_TYPE != "MASS"].index.drop_duplicates())} non mass pathologies.')
+        #df.drop(index=df[df.ABNORMALITY_TYPE != 'MASS'].index, inplace=True)
 
-        # Se añaden columnas informativas sobre la base de datos utilizada
+        # Se añaden columnas informativas sobre la base de datos utilizada根据使用的数据库添加信息列
         self.add_dataset_columns(df)
 
         # Se realiza la búsqueda de las imagenes crudas

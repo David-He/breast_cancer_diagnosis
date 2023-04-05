@@ -66,15 +66,23 @@ def training_pipe(m: Model, db: BreastCancerDataset, q: Queue, c: conf.MODEL_FIL
     """
     Función utilizada para generar el pipeline de entrenamiento de cada modelo. Dado que tensorflow no libera cache
     al entrenar un modelo, se debe de llamar esta función a través de un thread o proceso paralelo.
-
+    函数用于生成每个模型的训练管道。由于TensorFlow在训练模型时不会释放缓存，因此必须通过线程或并行过程调用该函数。
     :param m: Red neuronal (objeto de la clase General Model) que contendrá cada algoritmo de dl
+              包含每个DL算法的神经网络（通用类模型的对象）
     :param db: Objeto BreastCancerDataset con las observaciones de los conjuntos de entrenamiento y validacion
+               对象BreastCancerDataSet，其中包含训练集和验证集的观察
     :param q: Queue para transmitir comunicar el resultado al thread principal.
+              排队将结果传达给主线程。
     :param fc: string indicando el tipo de estructura a utulizar como top layers de cada arquitectura
+              表示要作为每个架构的顶层使用的结构类型的字符串
     :param c: objeto Model files que contiene información sobre ls rutas de guardado de cada modelo
+              对象模型文件，其中包含有关每个模型的ls保存路径的信息
     :param task_type: admite los valores 'classification' o 'segmentation' para escoger el tipo de tarea a realizar
+           支持“分类”或“分段”值来选择要执行的任务类型
     :param weight_init: nombre o path de los pesos con los que inicializar el entrenamiento de un modelo.
+           用于初始化模型训练的权重的名称或路径。
     :param frozen_layers: número de capas a entrenar en cada modelo
+           每个模型中要训练的层数
 
     """
     # Se inicializa cada modelo:
