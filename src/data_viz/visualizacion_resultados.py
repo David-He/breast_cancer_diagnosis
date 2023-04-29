@@ -665,6 +665,7 @@ class DataVisualizer:
         
 
         # Se iteran las transformaciones
+        # 迭代变换
         for i, (transformation_name, transformation) in enumerate(CLASSIFICATION_DATA_AUGMENTATION_FUNCS.items(), 2):
             # Se crea al datagenerator con exclusivamente la transformación a aplicar.
             transformation.p = 1
